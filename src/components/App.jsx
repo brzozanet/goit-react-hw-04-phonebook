@@ -1,8 +1,8 @@
-import { nanoid } from "nanoid";
 import { Component } from "react";
-import { ContactForm } from "./components/ContactForm";
-import { Filter } from "./components/Filter";
-import { ContactList } from "./components/ContactList";
+import { nanoid } from "nanoid";
+import { ContactForm } from "./ContactForm";
+import { Filter } from "./Filter";
+import { ContactList } from "./ContactList";
 import css from "./App.module.css";
 
 export class App extends Component {
@@ -20,7 +20,7 @@ export class App extends Component {
     this.state.contacts = parsedContacts || [];
   }
 
-  addContact = (event) => {
+  addContact = event => {
     event.preventDefault();
     const contact = {
       id: nanoid(),
@@ -30,7 +30,7 @@ export class App extends Component {
 
     if (
       this.state.contacts.find(
-        (contact) =>
+        contact =>
           contact.name.toLowerCase() ===
           event.target.elements.name.value.toLowerCase()
       )
@@ -40,20 +40,20 @@ export class App extends Component {
       return;
     }
 
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       contacts: [...prevState.contacts, contact],
     }));
 
     event.target.reset();
   };
 
-  handleFilterChange = (event) => {
+  handleFilterChange = event => {
     this.setState({ filter: event.target.value });
   };
 
-  deleteContact = (id) => {
-    this.setState((prevState) => ({
-      contacts: prevState.contacts.filter((contact) => contact.id !== id),
+  deleteContact = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
 
@@ -62,7 +62,7 @@ export class App extends Component {
   }
 
   render() {
-    const filteredContacts = this.state.contacts.filter((contact) =>
+    const filteredContacts = this.state.contacts.filter(contact =>
       contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
     );
 
