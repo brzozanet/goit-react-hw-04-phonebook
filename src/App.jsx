@@ -1,26 +1,24 @@
+import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
-import { Component } from "react";
+// import { Component } from "react";
 import { ContactForm } from "./components/ContactForm";
 import { Filter } from "./components/Filter";
 import { ContactList } from "./components/ContactList";
 import css from "./App.module.css";
 
-export class App extends Component {
-  state = {
-    contacts: [],
-    filter: "",
-    name: "",
-    number: "",
-  };
+export const AppFn = () => {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState("");
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
 
-  constructor() {
-    super();
+  useEffect(() => {
     const savedContacts = localStorage.getItem("contacts");
     const parsedContacts = JSON.parse(savedContacts);
-    this.state.contacts = parsedContacts || [];
-  }
+    setContacts(() => parsedContacts || []);
+  }, []);
 
-  addContact = (event) => {
+  const addContact = (event) => {
     event.preventDefault();
     const contact = {
       id: nanoid(),
@@ -28,24 +26,67 @@ export class App extends Component {
       number: event.target.elements.number.value,
     };
 
-    if (
-      this.state.contacts.find(
-        (contact) =>
-          contact.name.toLowerCase() ===
-          event.target.elements.name.value.toLowerCase()
-      )
-    ) {
+    const alreadyExistingContact = contacts.find(
+      (contact) =>
+        contact.name.toLowerCase() ===
+        event.target.elements.name.value.toLowerCase()
+    );
+
+    if (alreadyExistingContact) {
       alert(`${event.target.elements.name.value} is already in contacts.`);
       event.target.reset();
       return;
     }
 
-    this.setState((prevState) => ({
-      contacts: [...prevState.contacts, contact],
+    setContacts((state) => ({
+      contacts: [...state, contact],
     }));
 
     event.target.reset();
   };
+};
+
+export class App extends Component {
+  // state = {
+  //   contacts: [],
+  //   filter: "",
+  //   name: "",
+  //   number: "",
+  // };
+
+  // constructor() {
+  //   super();
+  //   const savedContacts = localStorage.getItem("contacts");
+  //   const parsedContacts = JSON.parse(savedContacts);
+  //   this.state.contacts = parsedContacts || [];
+  // }
+
+  // addContact = (event) => {
+  //   event.preventDefault();
+  //   const contact = {
+  //     id: nanoid(),
+  //     name: event.target.elements.name.value,
+  //     number: event.target.elements.number.value,
+  //   };
+
+  //   if (
+  //     this.state.contacts.find(
+  //       (contact) =>
+  //         contact.name.toLowerCase() ===
+  //         event.target.elements.name.value.toLowerCase()
+  //     )
+  //   ) {
+  //     alert(`${event.target.elements.name.value} is already in contacts.`);
+  //     event.target.reset();
+  //     return;
+  //   }
+
+  //   this.setState((prevState) => ({
+  //     contacts: [...prevState.contacts, contact],
+  //   }));
+
+  //   event.target.reset();
+  // };
 
   handleFilterChange = (event) => {
     this.setState({ filter: event.target.value });
